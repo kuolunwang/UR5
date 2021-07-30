@@ -87,10 +87,10 @@ int main(int argc, char** argv)
   // Initialize gripper
   ros::Duration(0.5).sleep(); initial_gripper();
   // Advertise services
-  ros::ServiceServer close_gripper_service     = pnh.advertiseService("close_gripper", close_gripper_cb);
-  ros::ServiceServer open_gripepr_service      = pnh.advertiseService("open_gripper", open_gripper_cb);
-  ros::ServiceServer check_grasp_succeed       = pnh.advertiseService("get_grasp_state", get_grasp_state_cb);
-  ros::ServiceServer initial_gripper_service   = pnh.advertiseService("initial_gripper", initial_gripper_cb);
+  ros::ServiceServer close_gripper_service     = pnh.advertiseService("/robotiq/close_gripper", close_gripper_cb);
+  ros::ServiceServer open_gripepr_service      = pnh.advertiseService("/robotiq/open_gripper", open_gripper_cb);
+  ros::ServiceServer check_grasp_succeed       = pnh.advertiseService("/robotiq/check_grasped", get_grasp_state_cb);
+  ros::ServiceServer initial_gripper_service   = pnh.advertiseService("/robotiq/initial_gripper", initial_gripper_cb);
   ros::Timer param_checker                     = pnh.createTimer(ros::Duration(1.0), timer_cb);
   // Spin until ROS shutdown  
   ros::spin();
