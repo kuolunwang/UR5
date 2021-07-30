@@ -7,11 +7,11 @@
             <arg name="tool_length" default="0.15"/>
     </include>
     
-    <!--Gripper-->
+    <!-- Gripper connection-->
     <node name="robotiq2FGripper" pkg="robotiq_2f_gripper_control" type="Robotiq2FGripperRtuNode.py"  args="/dev/ttyUSB0" required="true"/>
 
-    <!--ur5 endeffector control-->
-    <!-- <node pkg="arm_bringup" type="ur5_specific_position.py" name="ur5_specific_position" output="screen"/> -->
+    <!-- UR5 endeffector control -->
+    <node pkg="ur5_bringup" type="ur5_control.py" name="ur5_control_node" output="screen"/>
 
     <!-- robotiq gripper control -->
     <node pkg="ur5_bringup" type="robotiq_gripper_control" name="robotiq_finger_control_node" output="screen">
