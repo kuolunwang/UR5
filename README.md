@@ -1,6 +1,6 @@
 # UR5
 
-The repo is robot repo for control UR5 with robotiq gripper on noetic.
+The repo is robot repo for control UR5 with robotiq gripper on melodic.
 
 UR5 repo including:
 * robotiq
