@@ -2,14 +2,19 @@
 
 The repo is robot repo for control UR5 with robotiq gripper on noetic.
 
-
-
 UR5 repo including:
 * robotiq
 * universal_robot
 * ur_modern_driver
 * arm_operation
 * ur5_bringup
+
+## ROS Distro Support
+
+|         | Melodic | Noetic  |
+|:-------:|:-------:|:-------:|
+| branch | [`melodic`](https://github.com/kuolunwang/UR5/tree/melodic) | [`noetic`](https://github.com/kuolunwang/UR5/tree/noetic) |
+| Status | supported | supported |
 
 ## Clone repo
 
