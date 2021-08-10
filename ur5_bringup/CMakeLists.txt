@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   std_srvs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -69,10 +70,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -106,7 +107,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES ur5_bringup
-#  CATKIN_DEPENDS roscpp rospy std_msgs std_srvs
+  CATKIN_DEPENDS roscpp rospy std_msgs std_srvs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -120,10 +121,6 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
 )
-
-add_executable(robotiq_gripper_control src/robotiq_gripper_control.cpp)
-add_dependencies(robotiq_gripper_control ${catkin_EXPORTED_TARGETS} robotiq_2f_gripper_control_gencpp)
-target_link_libraries(robotiq_gripper_control ${catkin_LIBRARIES})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
