@@ -23,7 +23,7 @@ class UR5():
         res = cur_poseResponse()
 
         try:
-            trans, rot = self.listener.lookupTransform("base_link", "ee_gripper_link", rospy.Time(0))
+            trans, rot = self.listener.lookupTransform("base_link", "ee_link", rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
             print("Service call failed: %s"%e)
 
@@ -38,7 +38,7 @@ class UR5():
         return res
 
     def ur5_home(self, req):
-        self.p.joint_value = [-3.125488344823019, -0.7493508497821253, -2.38697320619692, -1.5348437468158167, 1.5634725093841553, -1.5657637755023401]
+        self.p.joint_value = [0.0509464405477047, -1.77635366121401, 1.7797303199768066, -3.31679612794985, -1.6238864103900355, -1.5725486914264124]
         self.mani_req.joints.append(self.p)
         res = TriggerResponse()
 
@@ -53,6 +53,6 @@ class UR5():
         return res
 
 if __name__ == "__main__":
-    rospy.init_node('ur5_control_node', anonymous=True)
-    ur5 = UR5
+    rospy.init_node('ur5_control_node')
+    ur5 = UR5()
     rospy.spin()
