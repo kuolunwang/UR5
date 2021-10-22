@@ -13,6 +13,7 @@ class UR5():
         rospy.Service("/ur5/go_home", Trigger, self.ur5_home)
         rospy.Service("/ur5/get_pose", cur_pose, self.get_pose)
         rospy.Service("/ur5/rotate", rotate, self.rotate_object)
+        self.goto_pose = rospy.ServiceProxy('/ur5_control_server/ur_control/goto_pose', arm_operation.srv.target_pose) 
         self.mani_joint_srv = '/ur5_control_server/ur_control/goto_joint_pose'
         self.mani_move_srv = rospy.ServiceProxy(self.mani_joint_srv, joint_pose)
         self.mani_req = joint_poseRequest()
@@ -27,7 +28,7 @@ class UR5():
         rad = math.pi * req.angle / 180 
         di = req.direction
 
-        for i in range(1, req.angle/6 + 1):
+        for i in range(1, 11):
 
             try:
                 trans, rot = self.listener.lookupTransform("base_link", "ee_link", rospy.Time(0))
@@ -37,13 +38,26 @@ class UR5():
             (row, pitch, yaw) = euler_from_quaternion(rot)
 
             if di == "right":
-                pitch += math.pi * 5 * i / 180
+                pitch += math.pi * i / 180
             else di == "left":
-                pitch -= math.pi * 5 * i / 180
+                pitch -= math.pi * i / 180
 
             quat = quaternion_from_euler(row, pitch, yaw)
 
             # call goto pose service
+
+            pose = arm_operation.srv.target_poseRequest()
+
+            pose.target_pose.position.x = trans[0]
+            pose.target_pose.position.y = trans[1]
+            pose.target_pose.position.z = trans[2]
+            pose.target_pose.orientation.x = quat[0]
+            pose.target_pose.orientation.y = quat[1]
+            pose.target_pose.orientation.z = quat[2]
+            pose.target_pose.orientation.w = quat[3]
+
+            self.goto_pose(pose)
+            
 
 
     def get_pose(self, req):
@@ -66,7 +80,7 @@ class UR5():
         return res
 
     def ur5_home(self, req):
-        self.p.joint_value = [0.0509464405477047, -1.77635366121401, 1.7797303199768066, -3.31679612794985, -1.6238864103900355, -1.5725486914264124]
+        self.p.joint_value = [0.0011516091180965304, -2.1101391951190394, 2.3055567741394043, -3.442627255116598, -1.5785711447345179, -1.567873779927389]
         self.mani_req.joints.append(self.p)
         res = TriggerResponse()
 
