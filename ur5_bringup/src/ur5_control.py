@@ -30,14 +30,14 @@ class UR5():
         di = req.direction
 
         try:
-            trans, _ = self.listener.lookupTransform("base_link", "ee_link", rospy.Time(0))
+            trans, _ = self.listener.lookupTransform("base_link", "object_link", rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
             print("Service call failed: %s"%e)
 
         for i in range(1, 6):
 
             try:
-                _, rot = self.listener.lookupTransform("base_link", "ee_link", rospy.Time(0))
+                _, rot = self.listener.lookupTransform("base_link", "object_link", rospy.Time(0))
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
                 print("Service call failed: %s"%e)
 
@@ -50,11 +50,9 @@ class UR5():
 
             quat = quaternion_from_euler(row, pitch, yaw)
 
-            # call goto pose service
-
             pose = arm_operation.srv.target_poseRequest()
 
-            pose.target_pose.position.x = trans[0] + 0.18
+            pose.target_pose.position.x = trans[0] 
             pose.target_pose.position.y = trans[1]
             pose.target_pose.position.z = trans[2]
             pose.target_pose.orientation.x = quat[0]
@@ -73,7 +71,7 @@ class UR5():
         res = cur_poseResponse()
 
         try:
-            trans, rot = self.listener.lookupTransform("base_link", "ee_link", rospy.Time(0))
+            trans, rot = self.listener.lookupTransform("base_link", "object_link", rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
             print("Service call failed: %s"%e)
 
