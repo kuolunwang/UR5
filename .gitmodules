@@ -7,3 +7,6 @@
 [submodule "ur_modern_driver"]
 	path = ur_modern_driver
 	url = git@github.com:ros-industrial/ur_modern_driver.git
+[submodule "arm_operation"]
+	path = arm_operation
+	url = git@github.com:kuolunwang/arm_operation.git
