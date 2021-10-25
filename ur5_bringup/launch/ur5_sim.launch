@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-    <!--  -->
+    <!-- end-effector link -->
     <node pkg="tf" type="static_transform_publisher" name="fake_tcp_publisher" 
     args="0.18 0.0 0.0 0.0 0.0 0.0 ee_link object_link 100"/>
 
@@ -10,7 +10,7 @@
 
     <!-- UR5 connection -->
     <include file="$(find arm_operation)/launch/ur5_sim.launch">
-            <!-- <arg name="tool_length" default="0.18"/> -->
+            <arg name="tool_length" default="0.18"/>
     </include>
 
     <!-- UR5 endeffector control -->
