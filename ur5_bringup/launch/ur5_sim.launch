@@ -3,7 +3,7 @@
 
     <!-- end-effector link -->
     <node pkg="tf" type="static_transform_publisher" name="fake_tcp_publisher" 
-    args="0.18 0.0 0.0 0.0 0.0 0.0 ee_link object_link 100"/>
+    args="0.18 0.0 0.0 0.0 0.0 0.0 ur5/ee_link ur5/object_link 100"/>
 
     <!-- UR5 gazebo -->
     <include file="$(find arm_gazebo)/launch/ur_gripper_gazebo.launch"/>

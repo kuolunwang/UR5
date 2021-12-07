@@ -30,14 +30,14 @@ class UR5():
         di = req.direction
 
         try:
-            trans, _ = self.listener.lookupTransform("base_link", "object_link", rospy.Time(0))
+            trans, _ = self.listener.lookupTransform("ur5/base_link", "ur5/object_link", rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
             print("Service call failed: %s"%e)
 
         for i in range(1, 6):
 
             try:
-                _, rot = self.listener.lookupTransform("base_link", "object_link", rospy.Time(0))
+                _, rot = self.listener.lookupTransform("ur5/base_link", "ur5/object_link", rospy.Time(0))
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
                 print("Service call failed: %s"%e)
 
@@ -71,7 +71,7 @@ class UR5():
         res = cur_poseResponse()
 
         try:
-            trans, rot = self.listener.lookupTransform("base_link", "object_link", rospy.Time(0))
+            trans, rot = self.listener.lookupTransform("ur5/base_link", "ur5/object_link", rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
             print("Service call failed: %s"%e)
 
