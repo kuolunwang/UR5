@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import rospy
 from arm_operation.srv import *
@@ -14,7 +14,7 @@ class UR5():
         rospy.Service("/ur5/go_home", Trigger, self.ur5_home)
         rospy.Service("/ur5/get_pose", cur_pose, self.get_pose)
         rospy.Service("/ur5/rotate", rotate, self.rotate_object)
-        self.goto_pose = rospy.ServiceProxy('/ur5_control_server/ur_control/goto_pose', arm_operation.srv.target_pose) 
+        self.goto_pose = rospy.ServiceProxy('/ur5_control_server/ur_control/goto_pose', arm_operation.srv.target_pose)
         self.mani_joint_srv = '/ur5_control_server/ur_control/goto_joint_pose'
         self.mani_move_srv = rospy.ServiceProxy(self.mani_joint_srv, joint_pose)
         self.mani_req = joint_poseRequest()
@@ -26,7 +26,7 @@ class UR5():
 
         res = rotateResponse()
 
-        rad = math.pi * req.angle / 180 
+        rad = math.pi * req.angle / 180
         di = req.direction
 
         try:
@@ -52,7 +52,7 @@ class UR5():
 
             pose = arm_operation.srv.target_poseRequest()
 
-            pose.target_pose.position.x = trans[0] 
+            pose.target_pose.position.x = trans[0]
             pose.target_pose.position.y = trans[1]
             pose.target_pose.position.z = trans[2]
             pose.target_pose.orientation.x = quat[0]
@@ -62,8 +62,8 @@ class UR5():
 
             self.goto_pose(pose)
 
-        res.result = "Finish rotation" 
-            
+        res.result = "Finish rotation"
+
         return res
 
     def get_pose(self, req):
@@ -97,7 +97,7 @@ class UR5():
         except (rospy.ServiceException, rospy.ROSException) as e:
             res.success = False
             print("Service call failed: %s"%e)
-        
+
         return res
 
 if __name__ == "__main__":
