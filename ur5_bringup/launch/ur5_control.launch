@@ -2,13 +2,16 @@
 <launch>
 
     <!-- end-effector link -->
-    <!-- <node pkg="tf" type="static_transform_publisher" name="fake_tcp_publisher" 
-    args="0.2 0.0 0.0 0.0 0.0 0.0 ee_link object_link 100"/> -->
+    <node pkg="tf" type="static_transform_publisher" name="arm_publisher" 
+    args="0.25 0.0 0.0 0.0 0.0 0.0 top_plate_link ur5_base_link 100"/>
+    
+     <node pkg="tf" type="static_transform_publisher" name="fake_publisher" 
+    args="0.06 0.0 0.0 0.0 0.0 0.0 ee_link object_link 100"/>
 
     <!-- UR5 connection -->
     <include file="$(find arm_operation)/launch/ur5_real.launch">
             <arg name="robot_ip" default="192.168.0.160" />
-            <arg name="tool_length" default="0.2"/>
+            <arg name="tool_length" default="0.06"/>
     </include>
     
     <!-- Gripper connection-->
@@ -16,6 +19,7 @@
 
     <!-- UR5 endeffector control -->
     <node pkg="ur5_bringup" type="ur5_control.py" name="ur5_control_node" output="screen"/>
+    <node pkg="ur5_bringup" type="ur5_move.py" name="ur5_move_node" output="screen"/>
 
     <!-- robotiq gripper control -->
     <!-- <node pkg="ur5_bringup" type="robotiq_gripper_control" name="robotiq_finger_control_node" output="screen">

@@ -23,7 +23,6 @@ class UR5():
 
         self.listener = tf.TransformListener()
 
-
     def rotate_object(self, req):
 
         res = rotateResponse()
@@ -73,7 +72,7 @@ class UR5():
         res = cur_poseResponse()
 
         try:
-            trans, rot = self.listener.lookupTransform("ur5/base_link", "ur5/ee_link", rospy.Time(0))
+            trans, rot = self.listener.lookupTransform("ur5_base_link", "object_link", rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
             print("Service call failed: %s"%e)
 
