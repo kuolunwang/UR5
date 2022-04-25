@@ -8,62 +8,66 @@ from ur5_bringup.srv import *
 import tf
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 import math
+from control_msgs.msg import *
+from trajectory_msgs.msg import *
 
 class UR5():
     def __init__(self):
-        rospy.Service("/ur5/go_home", Trigger, self.ur5_home)
-        rospy.Service("/ur5/go_move", Trigger, self.ur5_move)
-        rospy.Service("/ur5/get_pose", cur_pose, self.get_pose)
-        rospy.Service("/ur5/rotate", rotate, self.rotate_object)
-        self.goto_pose = rospy.ServiceProxy('/ur5_control_server/ur_control/goto_pose', arm_operation.srv.target_pose)
-        self.mani_joint_srv = '/ur5_control_server/ur_control/goto_joint_pose'
-        self.mani_move_srv = rospy.ServiceProxy(self.mani_joint_srv, joint_pose)
-        self.mani_req = joint_poseRequest()
-        self.p = joint_value()
 
+        name = rospy.get_param("~name")
+
+        rospy.Service("ur5/go_home", Trigger, self.ur5_home)
+        rospy.Service("gripper/open", Trigger, self.open)
+        rospy.Service("gripper/close", Trigger, self.close)
+        rospy.Service("ur5/get_pose", cur_pose, self.get_pose)
+        self.gripper_control_pub = rospy.Publisher("gripper_controller/follow_joint_trajectory/goal", FollowJointTrajectoryActionGoal, queue_size=1)
+        self.goto_pose = rospy.ServiceProxy('ur5_control_server/ur_control/goto_pose', arm_operation.srv.target_pose)
+        self.mani_joint_srv = 'ur5_control_server/ur_control/goto_joint_pose'
+        self.mani_move_srv = rospy.ServiceProxy(self.mani_joint_srv, joint_pose)
+        
         self.listener = tf.TransformListener()
 
-    def rotate_object(self, req):
+    def open(self, req):
 
-        res = rotateResponse()
+        res = TriggerResponse()
 
-        rad = math.pi * req.angle / 180
-        di = req.direction
+        req = FollowJointTrajectoryActionGoal()
 
-        try:
-            trans, _ = self.listener.lookupTransform("ur5_base_link", "ur5/object_link", rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-            print("Service call failed: %s"%e)
+        req.goal.trajectory.joint_names = ["gripper_finger1_joint"]
+        p = JointTrajectoryPoint()
+        p.positions = [0]
+        p.velocities = [0]
+        p.accelerations = [0]
+        p.effort = [0]
+        p.time_from_start.secs = 1
 
-        for i in range(1, 6):
+        req.goal.trajectory.points = [p]
 
-            try:
-                _, rot = self.listener.lookupTransform("ur5_base_link", "ur5/object_link", rospy.Time(0))
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-                print("Service call failed: %s"%e)
+        self.gripper_control_pub.publish(req)
 
-            (row, pitch, yaw) = euler_from_quaternion(rot)
+        res.success = True
 
-            if di == "right":
-                yaw += math.pi / 180
-            elif di == "left":
-                yaw -= math.pi / 180
+        return res
 
-            quat = quaternion_from_euler(row, pitch, yaw)
+    def close(self, req):
 
-            pose = arm_operation.srv.target_poseRequest()
+        res = TriggerResponse()
 
-            pose.target_pose.position.x = trans[0]
-            pose.target_pose.position.y = trans[1]
-            pose.target_pose.position.z = trans[2]
-            pose.target_pose.orientation.x = quat[0]
-            pose.target_pose.orientation.y = quat[1]
-            pose.target_pose.orientation.z = quat[2]
-            pose.target_pose.orientation.w = quat[3]
+        req = FollowJointTrajectoryActionGoal()
 
-            self.goto_pose(pose)
+        req.goal.trajectory.joint_names = ["gripper_finger1_joint"]
+        p = JointTrajectoryPoint()
+        p.positions = [1]
+        p.velocities = [0]
+        p.accelerations = [0]
+        p.effort = [0]
+        p.time_from_start.secs = 1
 
-        res.result = "Finish rotation"
+        req.goal.trajectory.points = [p]
+
+        self.gripper_control_pub.publish(req)
+
+        res.success = True
 
         return res
 
@@ -72,7 +76,7 @@ class UR5():
         res = cur_poseResponse()
 
         try:
-            trans, rot = self.listener.lookupTransform("ur5_base_link", "object_link", rospy.Time(0))
+            trans, rot = self.listener.lookupTransform("ur5/base_link", "object_link", rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
             print("Service call failed: %s"%e)
 
@@ -87,26 +91,10 @@ class UR5():
         return res
 
     def ur5_home(self, req):
-        self.p.joint_value = [0.0008036920917220414, -1.7026765982257288, 2.583789587020874, -3.9859922567950647, -1.5720651785479944, -1.5705106894122522]
-        
-        # self.p.joint_value = [0.0011875617783516645, -2.1486170927630823, 2.3022329807281494, -3.3030384222613733, -1.5724604765521448, -1.5706184546100062]
-        self.mani_req.joints.append(self.p)
-        res = TriggerResponse()
+        self.p = joint_value()
+        self.mani_req = joint_poseRequest()
 
-        try:
-            rospy.wait_for_service(self.mani_joint_srv)
-            mani_resp = self.mani_move_srv(self.mani_req)
-            res.success = True
-        except (rospy.ServiceException, rospy.ROSException) as e:
-            res.success = False
-            print("Service call failed: %s"%e)
-
-        return res
-
-    def ur5_move(self, req):
-        self.p.joint_value = [0.0004557750653475523, -1.3717764059649866, 2.234105110168457, -3.967341725026266, -1.5716574827777308, -1.570486847554342]
-        
-        # self.p.joint_value = [0.0011875617783516645, -2.1486170927630823, 2.3022329807281494, -3.3030384222613733, -1.5724604765521448, -1.5706184546100062]
+        self.p.joint_value = [0.0011875617783516645, -2.1486170927630823, 2.3022329807281494, -3.3030384222613733, -1.5724604765521448, -1.5706184546100062]
         self.mani_req.joints.append(self.p)
         res = TriggerResponse()
 

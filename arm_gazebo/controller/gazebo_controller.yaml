@@ -1,0 +1,49 @@
+gazebo_ros_control:
+  pid_gains:
+    gripper_finger1_joint:
+      p: 20.0
+      i: 0.1
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true
+
+    gripper_finger2_joint:
+      p: 20.0
+      i: 0.1
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true
+
+    gripper_finger2_inner_knuckle_joint:
+      p: 20.0
+      i: 0.1
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true
+
+    gripper_finger1_inner_knuckle_joint:
+      p: 20.0
+      i: 0.1
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true
+
+    gripper_finger1_finger_tip_joint:
+      p: 20.0
+      i: 0.1
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true
+
+    gripper_finger2_finger_tip_joint:
+      p: 20.0
+      i: 0.1
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true
