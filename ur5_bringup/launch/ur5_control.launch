@@ -8,6 +8,9 @@
      <node pkg="tf" type="static_transform_publisher" name="fake_publisher" 
     args="0.06 0.0 0.0 0.0 0.0 0.0 ee_link object_link 100"/>
 
+    <node pkg="tf" type="static_transform_publisher" name="camera_tf"
+    args="0.014682 -0.019393 0.055383 -0.012394 0.078094 0.007047 0.996844 ee_link camera_link 100"/>
+
     <!-- UR5 connection -->
     <include file="$(find arm_operation)/launch/ur5_real.launch">
             <arg name="robot_ip" default="192.168.0.160" />
