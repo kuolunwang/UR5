@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
+    <arg name="namespace" default="robot" />
+    <arg name="husky" default="false" />
+
     <!-- end-effector link -->
-    <node pkg="tf" type="static_transform_publisher" name="arm_publisher" 
-    args="0.25 0.0 0.0 0.0 0.0 0.0 top_plate_link ur5_base_link 100"/>
-    
+    <group if="$(arg husky)">
+        <node pkg="tf" type="static_transform_publisher" name="arm_publisher" 
+        args="0.25 0.0 0.0 0.0 0.0 0.0 top_plate_link ur5_base_link 100"/>
+    </group>
+
     <node pkg="tf" type="static_transform_publisher" name="fake_publisher" 
-    args="0.06 0.0 0.0 0.0 0.0 0.0 ee_link object_link 100"/>
+    args="0.15 0.0 0.0 0.0 0.0 0.0 ee_link object_link 100"/>
 
     <!-- <node pkg="tf" type="static_transform_publisher" name="camera_tf"
     args="0.014682 -0.019393 0.055383 -0.012394 0.078094 0.007047 0.996844 ee_link camera_link 100"/> -->
@@ -14,20 +19,21 @@
     <!-- UR5 connection -->
     <include file="$(find arm_operation)/launch/ur5_real.launch">
             <arg name="robot_ip" default="192.168.0.160" />
-            <arg name="tool_length" default="0.06"/>
+            <arg name="tool_length" default="0.15"/>
     </include>
     
     <!-- Gripper connection-->
-    <!-- <node name="robotiq2FGripper" pkg="robotiq_2f_gripper_control" type="Robotiq2FGripperRtuNode.py"  args="/dev/ttyUSB1" required="true"/> -->
+    <node name="robotiq2FGripper" pkg="robotiq_2f_gripper_control" type="Robotiq2FGripperRtuNode.py"  args="/dev/ttyUSB0" required="true"/>
 
     <!-- UR5 endeffector control -->
-    <node pkg="ur5_bringup" type="ur5_control.py" name="ur5_control_node" output="screen"/>
-    <node pkg="ur5_bringup" type="ur5_move.py" name="ur5_move_node" output="screen"/>
+    <node pkg="ur5_bringup" type="ur5_control.py" name="ur5_control_node" output="screen">
+        <param name="name" value="$(arg namespace)"/>
+    </node>
 
     <!-- robotiq gripper control -->
-    <!-- <node pkg="ur5_bringup" type="robotiq_gripper_control" name="robotiq_finger_control_node" output="screen">
+    <node pkg="ur5_bringup" type="robotiq_gripper_control" name="robotiq_finger_control_node" output="screen">
         <param name="upper_thres" value="222"/>
         <param name="lower_thres" value="10"/>
-    </node> -->
+    </node>
 
 </launch>
