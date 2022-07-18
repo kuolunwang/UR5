@@ -379,7 +379,7 @@
             <kd>1.0</kd>
         </gazebo>
 
-	<!-- <gazebo>
+	<gazebo>
 	  <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
             <arm>
               <arm_name>gripper_arm</arm_name>
@@ -399,7 +399,7 @@
 	    <disable_collisions_on_attach>true</disable_collisions_on_attach>
 	    <contact_topic>__default_topic__</contact_topic>
 	  </plugin>
-	</gazebo> -->
+	</gazebo>
 
         <xacro:robotiq_85_gripper_transmission prefix="${prefix}" />
 
