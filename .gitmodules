@@ -10,3 +10,9 @@
 [submodule "arm_operation"]
 	path = arm_operation
 	url = git@github.com:kuolunwang/arm_operation.git
+[submodule "gazebo-pkgs"]
+	path = gazebo-pkgs
+	url = git@github.com:JenniferBuehler/gazebo-pkgs.git
+[submodule "general-message-pkgs"]
+	path = general-message-pkgs
+	url = git@github.com:JenniferBuehler/general-message-pkgs.git
